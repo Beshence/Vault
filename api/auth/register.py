@@ -61,7 +61,6 @@ def post_v1dot0(username: str, password: str):
     if user is not None:
         return {
             "error": {
-                "code": 1,  # TODO: create own status
                 "name": "user_already_exists",
                 "description": "User with specified username is already present in our database. Can't register with this username."
             }

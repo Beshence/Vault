@@ -113,7 +113,6 @@ def get_v1dot0(token_info: dict, chain_name: str, event_id: str):
     if not misc.check_chain_name(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_chain_name",
                 "description": "As a part of specification, chain name should be lowercase alpha string (only letters) with maximum length of 32."
             }
@@ -122,7 +121,6 @@ def get_v1dot0(token_info: dict, chain_name: str, event_id: str):
     if not misc.check_uuid(event_id):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_event_id",
                 "description": "As a part of specification, Event ID should be UUID."
             }
@@ -133,7 +131,6 @@ def get_v1dot0(token_info: dict, chain_name: str, event_id: str):
     if not device.user.check_chain_exists(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "chain_not_initialized",
                 "description": "Chain with name specified is not initialized. Refer to POST /chain/{chain_name}."
             }
@@ -145,7 +142,6 @@ def get_v1dot0(token_info: dict, chain_name: str, event_id: str):
             get_config().data_directory + "/userevents/v1/" + device.user.user_id + "/v1/" + chain_name + "/" + event_id + "/" + "data.txt").is_file():
         return {
             "error": {
-                "code": 1,  # TODO: create own status
                 "name": "not_found",
                 "description": "No event with this id was found."
             }
@@ -169,7 +165,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if not misc.check_chain_name(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_chain_name",
                 "description": "As a part of specification, chain name should be lowercase alpha string (only letters) with maximum length of 32."
             }
@@ -178,7 +173,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if event.get("request_id", None) is None:
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "no_request_id",
                 "description": "As a part of specification, the body of POST request must have 'request_id' parameter."
             }
@@ -187,7 +181,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if not misc.check_uuid(event["request_id"]):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_request_id",
                 "description": "As a part of specification, the 'request_id' parameter must be UUID."
             }
@@ -196,7 +189,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if event.get("type", None) is None:
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "no_event_type",
                 "description": "As a part of specification, all events have to have a type."
             }
@@ -205,7 +197,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if event.get("data", None) is None:
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "no_event_data",
                 "description": "As a part of specification, all events have to have 'data' key. It can be empty (no key-value pairs) (it's up to overlying application specification), but it still have to be present."
             }
@@ -214,7 +205,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if event.get("v", None) is None:
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "no_event_version",
                 "description": "As a part of specification, all event have to have 'v' key, which stands for event version. This version is up to overlying application specification, but it still have to be present."
             }
@@ -223,8 +213,7 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if not((type(event["v"]) is str) or (type(event["v"]) is int)):
         return {
             "error": {
-                "code": 1,  # TODO: create code
-                "name": "event_version_is_not_a_string",
+                "name": "malformed_event_version",
                 "description": "As a part of specification, version of event have to be string or integer."
             }
         }, 400
@@ -234,7 +223,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if not device.user.check_chain_exists(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "chain_not_initialized",
                 "description": "Chain with name specified is not initialized. Refer to POST /chain/{chain_name}."
             }
@@ -243,7 +231,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
     if device.user.get_last_event_id(chain_name) != event.get("parent", None):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "parent_mismatch",
                 "description": "Event's parent event is not the last event of this chain."
             }
@@ -253,7 +240,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
         if type(event["files"]) is not list:
             return {
                 "error": {
-                    "code": 1,  # TODO: create code
                     "name": "malformed_files",
                     "description": "\"files\" parameter must be array of strings representing IDs of files."
                 }
@@ -262,7 +248,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
         if not all(isinstance(elem, str) for elem in event["files"]):
             return {
                 "error": {
-                    "code": 1,  # TODO: create code
                     "name": "malformed_files",
                     "description": "\"files\" parameter must be array of strings representing IDs of files."
                 }
@@ -271,7 +256,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
         if not all(misc.check_uuid(file_id) for file_id in event["files"]):
             return {
                 "error": {
-                    "code": 1,  # TODO: create code
                     "name": "malformed_files",
                     "description": "\"files\" parameter must be array of strings representing IDs of files."
                 }
@@ -282,7 +266,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
                 for file_id in event["files"]):
             return {
                 "error": {
-                    "code": 1,  # TODO: create code
                     "name": "nonexistent_temp_files",
                     "description": "Some IDs in \"files\" parameter are not present on the server."
                 }
@@ -306,7 +289,6 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
         except:
             return {
                 "error": {
-                    "code": 1,  # TODO: create code
                     "name": "server_error",
                     "description": "Server could not add event to the chain. Please retry."
                 }

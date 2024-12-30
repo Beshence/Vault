@@ -44,7 +44,6 @@ def search_v1dot0(token_info: dict, chain_name: str):
     if not misc.check_chain_name(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_chain_name",
                 "description": "As a part of specification, chain name should be lowercase alpha string (only letters) with maximum length of 32."
             }
@@ -55,7 +54,6 @@ def search_v1dot0(token_info: dict, chain_name: str):
     if not device.user.check_chain_exists(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "chain_not_initialized",
                 "description": "Chain with name specified is not initialized. Refer to POST /chain/{chain_name}."
             }
@@ -65,8 +63,7 @@ def search_v1dot0(token_info: dict, chain_name: str):
     if last_event_id is None:
         return {
             "error": {
-                "code": 1,  # TODO: create own status
-                "name": "not_found",
+                "name": "no_events",
                 "description": "This chain doesn't have any events."
             }
         }, 400
@@ -74,6 +71,6 @@ def search_v1dot0(token_info: dict, chain_name: str):
         "response": {
             "last": last_event_id
         }
-    }
+    }, 200
 
 # no post/put as there will be no force push

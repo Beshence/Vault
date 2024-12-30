@@ -51,7 +51,6 @@ def search_v1dot0(username: str, password: str):
     if user is None:
         return {
             "error": {
-                "code": 1,  # TODO: create own status
                 "name": "wrong_username_or_password",
                 "description": "Could not find this user-password pair."
             }
@@ -59,7 +58,6 @@ def search_v1dot0(username: str, password: str):
     if user.password != password:
         return {
             "error": {
-                "code": 1,  # TODO: create own status
                 "name": "wrong_username_or_password",
                 "description": "Could not find this user-password pair."
             }

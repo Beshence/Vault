@@ -58,7 +58,6 @@ def post_v1dot0(token_info, chain_name):
     if not misc.check_chain_name(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_chain_name",
                 "description": "As a part of specification, chain name should be lowercase alpha string (only letters) with maximum length of 32."
             }
@@ -71,7 +70,6 @@ def post_v1dot0(token_info, chain_name):
     if chain_options_file.exists():
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "chain_already_initialized",
                 "description": "Chain with name specified is already created."
             }

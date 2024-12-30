@@ -76,7 +76,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
     if not misc.check_chain_name(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_chain_name",
                 "description": "As a part of specification, chain name should be lowercase alpha string (only letters) with maximum length of 32."
             }
@@ -85,7 +84,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
     if not misc.check_uuid(event_id):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_event_id",
                 "description": "As a part of specification, Event ID should be UUID."
             }
@@ -94,7 +92,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
     if not misc.check_uuid(file_id):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_file_id",
                 "description": "As a part of specification, File ID should be UUID."
             }
@@ -105,7 +102,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
     if not device.user.check_chain_exists(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "chain_not_initialized",
                 "description": "Chain with name specified is not initialized. Refer to POST /chain/{chain_name}."
             }
@@ -118,7 +114,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
             get_config().data_directory + "/userevents/v1/" + device.user.user_id + "/v1/" + chain_name + "/" + event_id + "/" + "data.txt").is_file():
         return {
             "error": {
-                "code": 1,  # TODO: create own status
                 "name": "not_found",
                 "description": "No event with this id was found."
             }
@@ -129,7 +124,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
         if "files" not in event.keys():
             return {
                 "error": {
-                    "code": 1,  # TODO: create own status
                     "name": "not_found",
                     "description": "No file with this id was found in this event."
                 }
@@ -138,7 +132,6 @@ def get_v1dot0(token_info, chain_name, event_id, file_id):
         if file_id not in event["files"]:
             return {
                 "error": {
-                    "code": 1,  # TODO: create own status
                     "name": "not_found",
                     "description": "No file with this id was found in this event."
                 }

@@ -119,7 +119,6 @@ async def post_v1dot0(token_info, chain_name, file: starlette.datastructures.Upl
     if not misc.check_chain_name(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "malformed_chain_name",
                 "description": "As a part of specification, chain name should be lowercase alpha string (only letters) with maximum length of 32."
             }
@@ -130,7 +129,6 @@ async def post_v1dot0(token_info, chain_name, file: starlette.datastructures.Upl
     if not device.user.check_chain_exists(chain_name):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "chain_not_initialized",
                 "description": "Chain with name specified is not initialized. Refer to POST /chain/{chain_name}."
             }
@@ -139,7 +137,6 @@ async def post_v1dot0(token_info, chain_name, file: starlette.datastructures.Upl
     if not isinstance(file, starlette.datastructures.UploadFile):
         return {
             "error": {
-                "code": 1,  # TODO: create code
                 "name": "not_a_file",
                 "description": "You're not sending a file."
             }

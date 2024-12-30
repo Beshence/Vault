@@ -100,7 +100,6 @@ class AddEventResponse:
 
 ERROR_RESPONSE = {
         "error": {
-            "code": 1,  # TODO: create own status
             "name": "unknown_api_version",
             "description": "Specified API version is unknown to the server. "
                            "Maybe it is too old or very new, so you should "
