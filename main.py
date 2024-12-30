@@ -1,5 +1,6 @@
 import multiprocessing
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 
 from connexion import AsyncApp
@@ -22,8 +23,10 @@ def add_event_thread():
         try:
             request: misc.AddEventRequest = misc.add_event_requests_queue.get()
             user = get_user_from_user_id(request.user_id)
-            response = user.add_event(request.chain_name, request.event)
-            queue_item_result = misc.AddEventResponse(request.temp_id, response)
+            timestamp = int(datetime.now(timezone.utc).timestamp() * 1000)
+            request.event["timestamp"] = timestamp
+            response = user.unsafe_add_event_and_set_last_event_id(request.chain_name, request.event)
+            queue_item_result = misc.AddEventResponse(request.temp_id, response, timestamp)
             misc.add_event_responses_queue.put(queue_item_result)
         except:
             continue

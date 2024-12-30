@@ -48,7 +48,7 @@ class User(misc.Base):
         f.flush()
         f.close()
 
-    def add_event(self, chain_name: str, event: dict) -> str:
+    def unsafe_add_event_and_set_last_event_id(self, chain_name: str, event: dict) -> str:
         event_id = self.unsafe_add_event(chain_name, event)
         self.unsafe_set_last_event_id(chain_name, event_id)
         return event_id
