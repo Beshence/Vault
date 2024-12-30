@@ -23,11 +23,15 @@ def add_event_thread():
         try:
             request: misc.AddEventRequest = misc.add_event_requests_queue.get()
             user = get_user_from_user_id(request.user_id)
+
             timestamp = int(datetime.now(timezone.utc).timestamp() * 1000)
             request.event["timestamp"] = timestamp
-            response = user.unsafe_add_event_and_set_last_event_id(request.chain_name, request.event)
-            queue_item_result = misc.AddEventResponse(request.temp_id, response, timestamp)
-            misc.add_event_responses_queue.put(queue_item_result)
+
+            event_id = user.unsafe_add_event_and_set_as_last(request.chain_name, request.event)
+            user.unsafe_change_events_next_event(request.chain_name, request.event["prev"], event_id)
+
+            response = misc.AddEventResponse(request.temp_id, event_id, timestamp)
+            misc.add_event_responses_queue.put(response)
         except:
             continue
 
