@@ -228,11 +228,11 @@ def post_v1dot0(token_info: dict, chain_name: str, event: dict):
             }
         }, 400
 
-    if device.user.get_last_event_id(chain_name) != event.get("parent", None):
+    if device.user.get_last_event_id(chain_name) != event.get("prev", None):
         return {
             "error": {
-                "name": "parent_mismatch",
-                "description": "Event's parent event is not the last event of this chain."
+                "name": "prev_mismatch",
+                "description": "Event's previous event is not the last event of this chain."
             }
         }, 400
 
