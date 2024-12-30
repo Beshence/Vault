@@ -27,12 +27,17 @@ def add_event_thread():
             timestamp = int(datetime.now(timezone.utc).timestamp() * 1000)
             request.event["timestamp"] = timestamp
 
+            first = user.get_first_event_id(request.chain_name) is None
             event_id = user.unsafe_add_event_and_set_as_last(request.chain_name, request.event)
-            user.unsafe_change_events_next_event(request.chain_name, request.event["prev"], event_id)
+            if first:
+                user.unsafe_set_first_event_id(request.chain_name, event_id)
+            if "prev" in request.event.keys():
+                user.unsafe_change_events_next_event(request.chain_name, request.event["prev"], event_id)
 
             response = misc.AddEventResponse(request.temp_id, event_id, timestamp)
             misc.add_event_responses_queue.put(response)
-        except:
+        except Exception as e:
+            print(e)
             continue
 
 

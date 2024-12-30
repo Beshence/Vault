@@ -39,9 +39,25 @@ class User(misc.Base):
         with open(last_event_path, "r") as f:  # TODO: synchronously read this file
             return f.read()
 
+    def get_first_event_id(self, chain_name):
+        folder_path = get_config().data_directory + "/userevents/v1/" + self.user_id + "/v1/" + chain_name
+        last_event_path = folder_path+"/FIRST"
+        Path(folder_path).mkdir(parents=True, exist_ok=True)
+        if not Path(last_event_path).is_file():
+            return None
+        with open(last_event_path, "r") as f:  # TODO: synchronously read this file
+            return f.read()
+
     def unsafe_set_last_event_id(self, chain_name, event_id):
         folder_path = get_config().data_directory + "/userevents/v1/" + self.user_id + "/v1/" + chain_name
         last_event_path = folder_path + "/LAST"
+        Path(folder_path).mkdir(parents=True, exist_ok=True)
+        with open(last_event_path, "w") as f:
+            f.write(event_id)
+
+    def unsafe_set_first_event_id(self, chain_name, event_id):
+        folder_path = get_config().data_directory + "/userevents/v1/" + self.user_id + "/v1/" + chain_name
+        last_event_path = folder_path + "/FIRST"
         Path(folder_path).mkdir(parents=True, exist_ok=True)
         with open(last_event_path, "w") as f:
             f.write(event_id)
