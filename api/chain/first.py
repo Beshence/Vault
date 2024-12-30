@@ -69,7 +69,7 @@ def search_v1dot0(token_info: dict, chain_name: str):
         }, 400
     return {
         "response": {
-            "last": first_event_id
+            "first": first_event_id
         }
     }, 200
 
