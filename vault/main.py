@@ -30,10 +30,10 @@ versioned_api.mount_versions(vault)"""
 
 from fastapi import FastAPI
 
-from vault.api import version_map
+from vault.api import get_versions_map
 from vault.misc import VersionedAPI
 
 app = FastAPI(title="Main", docs_url=None, redoc_url=None)
 
-versioned_api = VersionedAPI(version_map)
+versioned_api = VersionedAPI(get_versions_map())
 versioned_api.build(app)
