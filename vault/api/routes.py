@@ -1,24 +1,21 @@
-from typing import Callable, Dict, List, Tuple
+from typing import Annotated
 
-# Словарь: версия -> (path -> (func, methods))
-functions_map: Dict[str, Dict[str, Tuple[Callable, List[str]]]] = {}
+from fastapi import Query, HTTPException
 
+from vault.api import versioned_route
+from vault.misc import get_versions
 
-def register(version: str, path: str, methods: List[str] = ["GET"]):
-    """
-    Декоратор для регистрации функции-обработчика на конкретную версию и путь
-    """
-    def decorator(func: Callable):
-        functions_map.setdefault(version, {})[path] = (func, methods)
-        return func
-    return decorator
+@versioned_route(
+    version="v1.0",
+    path="/ping",
+    methods=["GET"],
+    name="Ping",
+    description="Ping server and get information about it.")
+def ping(error: Annotated[bool, Query()] = False) -> dict:
+    if error:
+        raise HTTPException(400, detail="You sent bad request on purpose.")
 
-
-@register("v1.0", "/get_user")
-def get_user_v1_0():
-    return {"user": "from v1.0"}
-
-
-@register("v1.2", "/get_user")
-def get_user_v1_2():
-    return {"user": "from v1.2"}
+    return {
+        "ping": "Pong!",
+        "latest_api_version": get_versions()[-1]
+    }
