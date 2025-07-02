@@ -7,7 +7,7 @@ from vault.misc import get_versions
 
 @versioned_route(
     version="v1.0",
-    path="/ping",
+    endpoint="/ping",
     methods=["GET"],
     name="Ping",
     description="Ping server and get information about it.")

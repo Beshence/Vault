@@ -4,5 +4,9 @@ version = "0.0.1"
 description = "Beshence Vault"
 requires-python = ">=3.13"
 dependencies = [
+    "aiosqlite>=0.21.0",
+    "alembic>=1.15.2",
+    "fastapi-users[sqlalchemy]>=14.0.1",
     "fastapi[standard]>=0.115.12",
+    "sqlmodel>=0.0.24",
 ]
