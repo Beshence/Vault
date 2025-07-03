@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request
 from fastapi_versionizer import api_version
 
-from vault.entities.user.manager import fastapi_users, auth_backend, current_active_user
-from vault.entities.user.model import User
+from vault.entities.user.manager import fastapi_users, auth_backend
 from vault.entities.user.schema import UserRead, UserCreate, UserUpdate
 
 api_router = APIRouter(
