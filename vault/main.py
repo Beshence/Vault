@@ -1,17 +1,25 @@
-from fastapi import FastAPI
+import uvicorn
+from fastapi import FastAPI, APIRouter
+from fastapi_versionizer import api_version
 
-from vault.api import build_router_for_version
-from vault.misc import get_versions
+from fastapi_versionizer.versionizer import Versionizer
 
-app = FastAPI(title="Main API", docs_url="/docs", redoc_url=None)
+from vault.api import api_router
 
-for version in get_versions(with_latest=True):
-    subapp = FastAPI(
-        title=f"API {version}",
-        docs_url="/docs",
-        redoc_url=None,
-        openapi_url="/openapi.json"
-    )
-    router = build_router_for_version(version)
-    subapp.include_router(router)
-    app.mount(f"/api/{version}", subapp)
+app = FastAPI(
+    root_path='/api',
+    title='Beshence Vault',
+    docs_url='/docs',
+    redoc_url=None,
+    description='Beshence Vault'
+)
+
+app.include_router(api_router)
+
+versions = Versionizer(
+    app=app,
+    prefix_format='/v{major}.{minor}',
+    semantic_version_format='{major}.{minor}',
+    latest_prefix='/latest',
+    sort_routes=True
+).versionize()
