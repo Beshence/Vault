@@ -12,10 +12,9 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from vault.core.config import settings
 from vault.core.db import get_async_session
 from vault.entities.user.model import User, AccessToken
-
-SECRET = "SECRET"
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
@@ -29,8 +28,7 @@ async def get_access_token_db(
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = settings.RESET_PASSWORD_TOKEN_SECRET
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"User {user.id} has registered.")

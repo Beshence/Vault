@@ -7,6 +7,7 @@ from fastapi_versionizer.versionizer import Versionizer
 from vault.api import api_router
 from vault.core.db import create_db_and_tables
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Not needed if you set up a migration system like Alembic

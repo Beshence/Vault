@@ -11,6 +11,7 @@ dependencies = [
     "fastapi-users-db-sqlalchemy",
     "fastapi-versionizer",
     "fastapi[standard]>=0.115.12",
+    "pydantic-settings>=2.10.1",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "sqlalchemy>=2.0.40",
