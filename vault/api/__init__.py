@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Request
-from fastapi_versionizer import api_version
+from typing import Optional
 
-from vault.entities.user.manager import fastapi_users, auth_backend
+from fastapi import APIRouter, Request, Depends
+from fastapi_versionizer import api_version
+from pydantic import BaseModel
+
+from vault.entities.user.manager import fastapi_users, auth_backend, current_user
+from vault.entities.user.model import User
 from vault.entities.user.schema import UserRead, UserCreate, UserUpdate
 
 api_router = APIRouter(
@@ -36,7 +40,16 @@ async def authenticated_route(user: User = Depends(current_active_user)):
     return {"message": f"Hello {user.email}!"}"""
 
 
+class PingV1_0(BaseModel):
+    ping: str = "pong"
+    latest_api_version: str = "v0.0"
+    username: str | None = "admin"
+
 @api_version(1, 0)
 @api_router.get('/ping', tags=['Common'])
-def ping(request: Request) -> dict:
-    return {"ping": "pong", "latest": request.app.state.latest_api_version}
+def ping(request: Request, user: Optional[User] = Depends(current_user(optional=True))) -> PingV1_0:
+    return PingV1_0(
+        ping="pong",
+        latest_api_version=request.app.state.latest_api_version,
+        username=user.username if user else None
+    )
