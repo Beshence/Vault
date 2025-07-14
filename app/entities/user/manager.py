@@ -13,9 +13,9 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyAccessTokenDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from vault.core.config import settings
-from vault.core.db import get_async_session
-from vault.entities.user.model import User, AccessToken
+from app.core.config import settings
+from app.core.db import get_async_session
+from app.entities.user.model import User, AccessToken
 
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
