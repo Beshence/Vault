@@ -7,8 +7,6 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "alembic>=1.15.2",
     "asyncpg>=0.30.0",
-    "fastapi-users",
-    "fastapi-users-db-sqlalchemy",
     "fastapi-versionizer",
     "fastapi[standard]>=0.115.12",
     "pydantic-settings>=2.10.1",
@@ -20,5 +18,3 @@ dependencies = [
 
 [tool.uv.sources]
 fastapi-versionizer = { git = "https://github.com/alexschimpf/fastapi-versionizer/", rev = "8d87636942ad21455af191197cb06fbf5072db15"}
-fastapi-users = { git = "https://github.com/Beshence/fastapi-users/"}
-fastapi-users-db-sqlalchemy = { git = "https://github.com/Beshence/fastapi-users-db-sqlalchemy/"}
