@@ -32,3 +32,13 @@ api_versions = Versionizer(
 ).versionize()
 
 app.state.latest_api_version = "v"+".".join(map(str, api_versions[-1]))
+
+@app.get('/.well-known/beshence/vault', tags=['Common'])
+async def well_known():
+    return {
+        # TODO: server id
+        "api": {
+            "base_url": None,
+            "base_path": "/api"
+        }
+    }
