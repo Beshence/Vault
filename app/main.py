@@ -46,7 +46,6 @@ app.state.versions = ["v"+".".join(map(str, api_version)) for api_version in api
 @app.get('/.well-known/beshence/vault', tags=['Common'])
 async def well_known(request: Request):
     return {
-        # TODO: server id
         "api": {
             "base_url": None,
             "path": "/api",
