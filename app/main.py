@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from fastapi_versionizer.versionizer import Versionizer
+from starlette.middleware.cors import CORSMiddleware
 
 from app.api import api_router
 
@@ -17,6 +18,14 @@ app = FastAPI(
     redoc_url=None,
     description='Beshence Vault',
     lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(api_router)
