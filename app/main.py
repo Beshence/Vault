@@ -39,6 +39,7 @@ async def well_known():
         # TODO: server id
         "api": {
             "base_url": None,
-            "path": "/api"
+            "path": "/api",
+            "latest_version": "v"+".".join(map(str, api_versions[-1])),
         }
     }
