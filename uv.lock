@@ -76,6 +76,7 @@ dependencies = [
     { name = "asyncpg" },
     { name = "fastapi", extra = ["standard"] },
     { name = "fastapi-versionizer" },
+    { name = "opaque" },
     { name = "pydantic-settings" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -90,6 +91,7 @@ requires-dist = [
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "fastapi-versionizer", git = "https://github.com/alexschimpf/fastapi-versionizer/?rev=8d87636942ad21455af191197cb06fbf5072db15" },
+    { name = "opaque", specifier = ">=1.0.0" },
     { name = "pydantic-settings", specifier = ">=2.10.1" },
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "pytest-asyncio", specifier = ">=1.0.0" },
@@ -415,6 +417,15 @@ wheels = [
 ]
 
 [[package]]
+name = "opaque"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pysodium" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ce/47/0269e26df66f407b758d77b73648b150b920c1f093c018ca93dffd619162/opaque-1.0.0.tar.gz", hash = "sha256:5b8a3e52624e6c9a43c784116cffac6af31788afdece3aa625eb7f99a20ebe32", size = 10913, upload-time = "2025-02-18T00:09:12.668Z" }
+
+[[package]]
 name = "packaging"
 version = "25.0"
 source = { registry = "https://pypi.org/simple" }
@@ -497,6 +508,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/7c/2d/c3338d48ea6cc0feb
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/0b/9fcc47d19c48b59121088dd6da2488a49d5f72dacf8262e2790a1d2c7d15/pygments-2.19.1-py3-none-any.whl", hash = "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c", size = 1225293, upload-time = "2025-01-06T17:26:25.553Z" },
 ]
+
+[[package]]
+name = "pysodium"
+version = "0.7.18"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/a5/bcb82a6056bc8ad0dbfdb0956ae1ff3b8eb9dd76c187723e82a3c5678982/pysodium-0.7.18.tar.gz", hash = "sha256:781ada024456ac74c411193b82d94018c85c94130ea01a22dbec48b8ff458b07", size = 26876, upload-time = "2024-08-07T11:49:21.886Z" }
 
 [[package]]
 name = "pytest"
