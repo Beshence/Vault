@@ -44,8 +44,9 @@ def upgrade() -> None:
         sa.Column('user_id', sa.UUID, nullable=False),
         sa.Column('id', sa.UUID, primary_key=True, nullable=False),
         sa.Column('name', sa.String, nullable=True),
-        sa.Column('type', sa.Enum('unknown', 'phone', 'computer'), nullable=False),
+        sa.Column('device_type', sa.Enum('unknown', 'phone', 'computer'), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP, nullable=False),
+        sa.Column('last_used_at', sa.TIMESTAMP, nullable=False),
         sa.Column('refresh_token', sa.String, unique=True, nullable=False),
         sa.Column('is_active', sa.Boolean, nullable=False),
     )
@@ -63,6 +64,8 @@ def upgrade() -> None:
         sa.Column('session_id', sa.UUID, nullable=False),
         sa.Column('id', sa.UUID, primary_key=True, nullable=False),
         sa.Column('name', sa.String, nullable=False),
+        sa.Column('created_at', sa.TIMESTAMP, nullable=False),
+        sa.Column('last_used_at', sa.TIMESTAMP, nullable=False),
         sa.Column('refresh_token', sa.String, unique=True, nullable=False),
         sa.Column('is_active', sa.Boolean, nullable=False),
     )
