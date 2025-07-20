@@ -14,7 +14,7 @@ class Ping(BaseModel):
 
 @api_version(1, 0)
 @api_router.get('/ping', tags=['Common'])
-def ping(request: Request) -> Ping:
+async def ping(request: Request) -> Ping:
     return Ping(
         ping="pong",
         latest_api_version=request.app.state.latest_api_version
