@@ -39,6 +39,6 @@ async def well_known():
         # TODO: server id
         "api": {
             "base_url": None,
-            "base_path": "/api"
+            "path": "/api"
         }
     }
