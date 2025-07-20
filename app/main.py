@@ -26,7 +26,6 @@ api_versions = Versionizer(
     default_version=(1, 0),
     prefix_format='/api/v{major}.{minor}',
     semantic_version_format='{major}.{minor}',
-    latest_prefix='/api/latest',
     sort_routes=True,
     include_main_docs=False,
     include_main_openapi_route=False
