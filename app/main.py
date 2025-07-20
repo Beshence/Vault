@@ -4,6 +4,7 @@ from fastapi import FastAPI
 
 from fastapi_versionizer.versionizer import Versionizer
 from starlette.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 
 from app.api import api_router
 
@@ -40,15 +41,15 @@ api_versions = Versionizer(
     include_main_openapi_route=False
 ).versionize()
 
-app.state.latest_api_version = "v"+".".join(map(str, api_versions[-1]))
+app.state.versions = ["v"+".".join(map(str, api_version)) for api_version in api_versions]
 
 @app.get('/.well-known/beshence/vault', tags=['Common'])
-async def well_known():
+async def well_known(request: Request):
     return {
         # TODO: server id
         "api": {
             "base_url": None,
             "path": "/api",
-            "latest_version": "v"+".".join(map(str, api_versions[-1])),
+            "versions": request.app.state.versions
         }
     }
