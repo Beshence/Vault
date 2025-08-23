@@ -28,6 +28,7 @@ def upgrade() -> None:
     op.create_table(
         'BVUsersPasswords',
         sa.Column('user_id', sa.UUID, primary_key=True, nullable=False, index=True),
+        sa.Column('username', sa.String, nullable=False, unique=True, index=True),
         sa.Column('password', sa.String, nullable=False),
     )
     with op.batch_alter_table('BVUsersPasswords', schema=None) as batch_op:
