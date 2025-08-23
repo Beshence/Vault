@@ -20,14 +20,14 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.create_table(
         'BVUsers',
-        sa.Column('id', sa.UUID, primary_key=True, nullable=False),
+        sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('fast_login_secret', sa.String, nullable=False),
         sa.Column('is_active', sa.Boolean, nullable=False),
     )
 
     op.create_table(
         'BVUsersPasswords',
-        sa.Column('user_id', sa.UUID, primary_key=True, nullable=False),
+        sa.Column('user_id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('password', sa.String, nullable=False),
     )
     with op.batch_alter_table('BVUsersPasswords', schema=None) as batch_op:
@@ -42,7 +42,7 @@ def upgrade() -> None:
     op.create_table(
         'BVSessions',
         sa.Column('user_id', sa.UUID, nullable=False),
-        sa.Column('id', sa.UUID, primary_key=True, nullable=False),
+        sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('name', sa.String, nullable=True),
         sa.Column('device_type', sa.Enum('unknown', 'phone', 'computer'), nullable=False),
         sa.Column('created_at', sa.TIMESTAMP, nullable=False),
@@ -62,7 +62,7 @@ def upgrade() -> None:
     op.create_table(
         'BVSessionsApps',
         sa.Column('session_id', sa.UUID, nullable=False),
-        sa.Column('id', sa.UUID, primary_key=True, nullable=False),
+        sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('name', sa.String, nullable=False),
         sa.Column('created_at', sa.TIMESTAMP, nullable=False),
         sa.Column('last_used_at', sa.TIMESTAMP, nullable=False),
