@@ -9,7 +9,7 @@ from starlette import status
 from app.core.auth import fake_users_db, Token, authenticate_user, \
     ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
 
-auth_router = APIRouter(prefix="/auth")
+auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @api_version(1, 0)
 @auth_router.post("/login")
