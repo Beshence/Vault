@@ -21,17 +21,17 @@ def upgrade() -> None:
     op.create_table(
         'BVUsers',
         sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
+        sa.Column('username', sa.String, unique=True, nullable=False, index=True),
         sa.Column('fast_login_secret', sa.String, nullable=False),
         sa.Column('is_active', sa.Boolean, nullable=False),
     )
 
     op.create_table(
-        'BVUsersPasswords',
+        'BVUsersCredentials',
         sa.Column('user_id', sa.UUID, primary_key=True, nullable=False, index=True),
-        sa.Column('username', sa.String, nullable=False, unique=True, index=True),
         sa.Column('password', sa.String, nullable=False),
     )
-    with op.batch_alter_table('BVUsersPasswords', schema=None) as batch_op:
+    with op.batch_alter_table('BVUsersCredentials', schema=None) as batch_op:
         batch_op.create_foreign_key(
             "fk_user_id",
             "BVUsers",
