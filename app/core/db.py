@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
-DATABASE_URL = "sqlite+aiosqlite:///./db.db"
+DATABASE_URL = "sqlite+aiosqlite:///data/users.db"
 
 
 class Base(DeclarativeBase):
