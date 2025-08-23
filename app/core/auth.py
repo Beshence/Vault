@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 
@@ -8,12 +9,19 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from pwdlib import PasswordHash
 from pwdlib.hashers.argon2 import Argon2Hasher
-from pydantic import BaseModel
+from sqlmodel import select, SQLModel
+from sqlmodel.ext.asyncio.session import AsyncSession
 from starlette import status
+
+from app.core.db import SessionDep
+from app.models.user import User
 
 JWT_SECRET_KEY = None
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+password_hash = PasswordHash([Argon2Hasher()])
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 def get_jwt_secret_key() -> str:
@@ -26,39 +34,13 @@ def get_jwt_secret_key() -> str:
     return JWT_SECRET_KEY
 
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$N4AWIENqb93qW1Aby0n3Ug$pZgve8wHjKIft6NrZ4RyhRfBd9rOERFWGwD5KI7NkPo",
-        "disabled": False,
-    }
-}
-
-
-class Token(BaseModel):
+class Token(SQLModel):
     access_token: str
     token_type: str
 
 
-class TokenData(BaseModel):
+class TokenData(SQLModel):
     username: str | None = None
-
-
-class User(BaseModel):
-    username: str
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
-
-
-class UserInDB(User):
-    hashed_password: str
-
-
-password_hash = PasswordHash([Argon2Hasher()])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 def verify_password(plain_password, hashed_password):
@@ -70,19 +52,38 @@ def get_password_hash(password):
     return password_hash.hash(password)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-    return None
+async def get_user_from_username(session: AsyncSession, username: str) -> User:
+    user = (await session.scalar(select(User).where(User.username == username)))
+    return user
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+async def get_user_from_id(session: AsyncSession, user_id: str) -> User:
+    user = (await session.scalar(select(User).where(User.id == uuid.UUID(user_id))))
+    return user
+
+
+async def register_user_with_credentials(session: AsyncSession, username: str, password: str) -> User:
+    if await get_user_from_username(session, username) is not None:
+        raise Exception(f"User {username} already exists")
+    user = User(
+        id=uuid.uuid4(),
+        username=username,
+        password=get_password_hash(password),
+        is_active=True,
+        # TODO: change fast login secret
+        fast_login_secret="123"
+    )
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    return user
+
+async def log_in_user_via_credentials(session: AsyncSession, username: str, password: str) -> User | None:
+    user = await get_user_from_username(session, username)
     if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
+        return None
+    if not verify_password(password, user.password):
+        return None
     return user
 
 
@@ -97,7 +98,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(session: SessionDep, token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -105,13 +106,13 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     )
     try:
         payload = jwt.decode(token, get_jwt_secret_key(), algorithms=[JWT_ALGORITHM])
-        username = payload.get("sub")
-        if username is None:
+        user_id = payload.get("sub")
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(username=user_id)
     except InvalidTokenError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = await get_user_from_id(session, token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -120,6 +121,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    if current_user.disabled:
+    if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

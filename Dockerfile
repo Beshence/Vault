@@ -9,12 +9,14 @@ ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-COPY . .
-
 # Use the system Python environment
 ENV UV_PROJECT_ENVIRONMENT="/usr/local/"
 
+COPY ./pyproject.toml /app/pyproject.toml
+
 RUN uv sync
+
+COPY . .
 
 ENV PYTHONUNBUFFERED=1
 EXPOSE 443
