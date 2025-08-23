@@ -22,23 +22,10 @@ def upgrade() -> None:
         'BVUsers',
         sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('username', sa.String, unique=True, nullable=False, index=True),
+        sa.Column('password', sa.String, nullable=True),
         sa.Column('fast_login_secret', sa.String, nullable=False),
         sa.Column('is_active', sa.Boolean, nullable=False),
     )
-
-    op.create_table(
-        'BVUsersCredentials',
-        sa.Column('user_id', sa.UUID, primary_key=True, nullable=False, index=True),
-        sa.Column('password', sa.String, nullable=False),
-    )
-    with op.batch_alter_table('BVUsersCredentials', schema=None) as batch_op:
-        batch_op.create_foreign_key(
-            "fk_user_id",
-            "BVUsers",
-            ["id"],
-            ["user_id"],
-            ondelete="CASCADE"
-        )
 
     op.create_table(
         'BVSessions',
@@ -81,6 +68,5 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.drop_table('BVUsers')
-    op.drop_table('BVUsersPasswords')
     op.drop_table('BVSessions')
     op.drop_table('BVSessionsApps')
