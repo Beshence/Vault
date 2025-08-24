@@ -23,9 +23,7 @@ def upgrade() -> None:
         sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('username', sa.String, unique=True, nullable=False, index=True),
         sa.Column('password', sa.String, nullable=True),
-        sa.Column('verified', sa.Boolean, nullable=False, default=False),
         sa.Column('fast_login_secret', sa.String, nullable=False),
-        sa.Column('is_active', sa.Boolean, nullable=False),
     )
 
     op.create_table(
