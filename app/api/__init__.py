@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from app.api.auth import auth_router
 from app.api.user import user_router
-from app.core.auth import User, get_current_active_user
+from app.core.auth import User, get_current_user_access_token
 from app.models.user import UserPublic
 
 api_router = APIRouter()
@@ -29,7 +29,7 @@ async def ping(request: Request) -> Ping:
 @api_version(1, 0)
 @api_router.get("/users/me", response_model=UserPublic)
 async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_user_access_token)],
 ):
     return current_user
 
@@ -37,6 +37,6 @@ async def read_users_me(
 @api_version(1, 0)
 @api_router.get("/users/me/items")
 async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_user_access_token)],
 ):
     return [{"item_id": "Foo", "owner": current_user.username}]

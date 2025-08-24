@@ -41,7 +41,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     root_path='',
     title='Beshence Vault',
-    redoc_url=None,
     description='Beshence Vault',
     lifespan=lifespan
 )

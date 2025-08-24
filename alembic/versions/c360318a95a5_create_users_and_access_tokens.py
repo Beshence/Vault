@@ -22,50 +22,29 @@ def upgrade() -> None:
         'BVUsers',
         sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('username', sa.String, unique=True, nullable=False, index=True),
-        sa.Column('password', sa.String, nullable=True),
-        sa.Column('fast_login_secret', sa.String, nullable=False),
+        sa.Column('password', sa.String, nullable=True)
     )
 
     op.create_table(
         'BVSessions',
-        sa.Column('user_id', sa.UUID, nullable=False),
+        sa.Column('user_id', sa.UUID, nullable=False, index=True),
         sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
         sa.Column('name', sa.String, nullable=True),
-        sa.Column('device_type', sa.Enum('unknown', 'phone', 'computer'), nullable=False),
+        sa.Column('jti', sa.UUID, unique=True, nullable=False),
+        sa.Column('scope', sa.String, nullable=False),
         sa.Column('created_at', sa.TIMESTAMP, nullable=False),
-        sa.Column('last_used_at', sa.TIMESTAMP, nullable=False),
-        sa.Column('refresh_token', sa.String, unique=True, nullable=False),
-        sa.Column('is_active', sa.Boolean, nullable=False),
+        sa.Column('updated_at', sa.TIMESTAMP, nullable=False),
     )
     with op.batch_alter_table('BVSessions', schema=None) as batch_op:
         batch_op.create_foreign_key(
             "fk_user_id",
             "BVUsers",
-            ["id"],
             ["user_id"],
+            ["id"],
             ondelete="CASCADE"
         )
 
-    op.create_table(
-        'BVSessionsApps',
-        sa.Column('session_id', sa.UUID, nullable=False),
-        sa.Column('id', sa.UUID, primary_key=True, nullable=False, index=True),
-        sa.Column('name', sa.String, nullable=False),
-        sa.Column('created_at', sa.TIMESTAMP, nullable=False),
-        sa.Column('last_used_at', sa.TIMESTAMP, nullable=False),
-        sa.Column('refresh_token', sa.String, unique=True, nullable=False),
-        sa.Column('is_active', sa.Boolean, nullable=False),
-    )
-    with op.batch_alter_table('BVSessionsApps', schema=None) as batch_op:
-        batch_op.create_foreign_key(
-            "fk_session_id",
-            "BVSessions",
-            ["id"],
-            ["session_id"],
-            ondelete="CASCADE"
-        )
 
 def downgrade() -> None:
     op.drop_table('BVUsers')
     op.drop_table('BVSessions')
-    op.drop_table('BVSessionsApps')
