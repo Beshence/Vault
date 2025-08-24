@@ -26,7 +26,7 @@ async def ping(request: Request) -> Ping:
         versions=request.app.state.versions
     )
 
-@api_version(1, 0)
+"""@api_version(1, 0)
 @api_router.get("/users/me", response_model=UserPublic)
 async def read_users_me(
     current_user: Annotated[User, Depends(get_current_user_access_token)],
@@ -39,4 +39,4 @@ async def read_users_me(
 async def read_own_items(
     current_user: Annotated[User, Depends(get_current_user_access_token)],
 ):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+    return [{"item_id": "Foo", "owner": current_user.username}]"""
